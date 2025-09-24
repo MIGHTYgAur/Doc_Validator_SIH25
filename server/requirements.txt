@@ -1,0 +1,28 @@
+# Core Flask Dependencies
+Flask==3.0.3
+Flask-CORS==4.0.0
+
+# Database
+pymongo==4.6.1
+Flask-PyMongo==2.3.0
+
+# Environment and Configuration
+python-dotenv==1.0.0
+
+# Authentication and Security
+bcrypt==4.1.2
+PyJWT==2.8.0
+
+# Document Processing
+pytesseract==0.3.10
+opencv-python==4.9.0.80
+Pillow==10.2.0
+PyMuPDF==1.23.26
+
+# Cloud Storage (Cloudinary)
+cloudinary==1.40.0
+
+# PDF Processing
+pypdf2==3.0.1
+pdf2image==1.17.0
+
