@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import { Shield } from 'lucide-react';
-import React from 'react';
+import { Shield, Building } from 'lucide-react';
 
-// User Login/Register Component
-const UserAuthForm = ({ isLogin = true, onToggle, onSubmit }) => {
+const UserAuthForm = ({ isLogin = true, onToggle, onSubmit, userType = 'individual' }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -16,8 +14,7 @@ const UserAuthForm = ({ isLogin = true, onToggle, onSubmit }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     onSubmit(formData);
   };
 
@@ -25,14 +22,20 @@ const UserAuthForm = ({ isLogin = true, onToggle, onSubmit }) => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md">
         <div className="text-center mb-8">
-          <Shield className="mx-auto h-12 w-12 text-blue-600 mb-4" />
+          {userType === 'institute' ? (
+            <Building className="mx-auto h-12 w-12 text-green-600 mb-4" />
+          ) : (
+            <Shield className="mx-auto h-12 w-12 text-blue-600 mb-4" />
+          )}
           <h2 className="text-3xl font-bold text-gray-900">
             {isLogin ? 'Welcome Back' : 'Create Account'}
           </h2>
-          <p className="text-gray-600 mt-2">Document Authenticity System</p>
+          <p className="text-gray-600 mt-2">
+            {userType === 'institute' ? 'Institute Login' : 'Individual Login'} - Document Authenticity System
+          </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="space-y-6">
           {!isLogin && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -77,7 +80,7 @@ const UserAuthForm = ({ isLogin = true, onToggle, onSubmit }) => {
             />
           </div>
 
-          {!isLogin && (
+          {!isLogin && userType === 'individual' && (
             <>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -111,12 +114,15 @@ const UserAuthForm = ({ isLogin = true, onToggle, onSubmit }) => {
           )}
 
           <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200"
+            onClick={handleSubmit}
+            className={`w-full py-2 px-4 rounded-lg focus:ring-2 focus:ring-offset-2 transition duration-200 ${userType === 'institute'
+                ? 'bg-green-600 text-white hover:bg-green-700 focus:ring-green-500'
+                : 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500'
+              }`}
           >
             {isLogin ? 'Sign In' : 'Create Account'}
           </button>
-        </form>
+        </div>
 
         <div className="text-center mt-6">
           <span className="text-gray-600">
