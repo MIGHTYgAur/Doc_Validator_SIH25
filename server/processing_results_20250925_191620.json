@@ -1,0 +1,35 @@
+{
+  "file_path": "uploads/sem1_marksheet.pdf",
+  "processing_timestamp": "2025-09-25T19:16:12.569904",
+  "status": "completed",
+  "pages_processed": 1,
+  "total_suspicion_score": 0,
+  "extracted_text": "\u00b0 SE Dinars of faa\n\u00a9. VEERMATA JIJABAI TECHNOLOGICAL INSTITUTE\noe ah} MATUNGA, MUMBAI - 400 019\n: wo} (Autonomous Institute Affiliated to University of Mumbai)\nviTl Semester Grade Report\n, B 37429\na ay TREHRE CAC\na a\na Ce\n\u00b0 Programme: Bachelor of Technology in Information Department : Computer Engg &\nTechnology Information Technology\nRSCH1011L | Chemistry - Laboratory 1.00 BB H\n; RSCH1011T | Chemistry 2.00 BB\n\u00a2 RSCO1001L | Programming for Problem Solving Laboratory 1.00 AA\nRSCO1001T | Programming for Problem Solving 2.00 AA\nRSCO1026T _| Probability and Statistics 2.00 BB\nR5CO1027T _ | Digital Logic Design 2.00 BC\nRSCO1028L | Computer Engineering Workshop 2.00 AB\nRSCO1029T | IKS for CS 2.00 BB\n\u00b0 R5SCO1030L | Co Curricular 2.00 BB\ny RSMA1003T | Mathematics-1 3.00 BC\nRSSE1001L _ | Engineering Mechanics Laboratory 1.00 BB {\nRSSE1001T _ | Engineering Mechanics 2.00 cc\nExamination conducted in December Odd 2023 Regular Sea\n'+' indicates passed in earlier attempts. beets\n'#' indicates no of attempts. EEO)\nCHNO/\n) Ke ) re : 4\nfs :\nf5( wasonon YE) LQ JUN 7024\n\u2018 \\\u00e9 MUMBAI - 19. oe \u2018\ngS. iS Date : Chetked by Controli\u00e9r of Examinations\nOe",
+  "page_results": [
+    {
+      "page_number": 1,
+      "image_path": "temp_images\\page_1.png",
+      "ocr_text": "\u00b0 SE Dinars of faa\n\u00a9. VEERMATA JIJABAI TECHNOLOGICAL INSTITUTE\noe ah} MATUNGA, MUMBAI - 400 019\n: wo} (Autonomous Institute Affiliated to University of Mumbai)\nviTl Semester Grade Report\n, B 37429\na ay TREHRE CAC\na a\na Ce\n\u00b0 Programme: Bachelor of Technology in Information Department : Computer Engg &\nTechnology Information Technology\nRSCH1011L | Chemistry - Laboratory 1.00 BB H\n; RSCH1011T | Chemistry 2.00 BB\n\u00a2 RSCO1001L | Programming for Problem Solving Laboratory 1.00 AA\nRSCO1001T | Programming for Problem Solving 2.00 AA\nRSCO1026T _| Probability and Statistics 2.00 BB\nR5CO1027T _ | Digital Logic Design 2.00 BC\nRSCO1028L | Computer Engineering Workshop 2.00 AB\nRSCO1029T | IKS for CS 2.00 BB\n\u00b0 R5SCO1030L | Co Curricular 2.00 BB\ny RSMA1003T | Mathematics-1 3.00 BC\nRSSE1001L _ | Engineering Mechanics Laboratory 1.00 BB {\nRSSE1001T _ | Engineering Mechanics 2.00 cc\nExamination conducted in December Odd 2023 Regular Sea\n'+' indicates passed in earlier attempts. beets\n'#' indicates no of attempts. EEO)\nCHNO/\n) Ke ) re : 4\nfs :\nf5( wasonon YE) LQ JUN 7024\n\u2018 \\\u00e9 MUMBAI - 19. oe \u2018\ngS. iS Date : Chetked by Controli\u00e9r of Examinations\nOe",
+      "suspicion_score": 0,
+      "processing_details": {},
+      "errors": [
+        "Error processing page 1: "
+      ]
+    }
+  ],
+  "validation_summary": {
+    "validation_level": "HIGH_CONFIDENCE",
+    "confidence_message": "Document appears authentic with high confidence",
+    "color_code": "green",
+    "average_suspicion_score": 0.0,
+    "total_pages": 1,
+    "text_extracted_successfully": true,
+    "watermark_applied": false
+  },
+  "errors": [
+    "Error processing page 1: ",
+    "Watermark error: rotate must be multiple of 90"
+  ],
+  "average_suspicion_score": 0.0,
+  "watermark_added": false
+}

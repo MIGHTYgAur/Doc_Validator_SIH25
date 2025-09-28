@@ -1,23 +1,37 @@
-import { useState } from 'react';
-import { Upload, FileText, Plus, User, LogOut, CheckCircle, Clock } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Upload, FileText, Plus, User, LogOut, CheckCircle, Clock, AlertCircle } from 'lucide-react';
+import ApiService from '../services/ApiService';
 
 const IssuerHomepage = ({ user, onLogout }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [documentType, setDocumentType] = useState('certificate');
   const [isUploading, setIsUploading] = useState(false);
-  const [uploadedDocs, setUploadedDocs] = useState([
-    {
-      id: 1,
-      name: 'Sample_Certificate.pdf',
-      type: 'certificate',
-      uploadDate: '2025-01-15',
-      status: 'verified'
+  const [uploadedDocs, setUploadedDocs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Load documents on component mount
+  useEffect(() => {
+    loadDocuments();
+  }, []);
+
+  const loadDocuments = async () => {
+    try {
+      setLoading(true);
+      const response = await ApiService.getIssuerDocuments(user.id);
+      setUploadedDocs(response.documents || []);
+    } catch (err) {
+      console.error('Failed to load documents:', err);
+      setError('Failed to load documents');
+    } finally {
+      setLoading(false);
     }
-  ]);
+  };
 
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
     setSelectedFile(file);
+    setError(null);
   };
 
   const handleUpload = async (e) => {
@@ -25,24 +39,35 @@ const IssuerHomepage = ({ user, onLogout }) => {
     if (!selectedFile) return;
 
     setIsUploading(true);
+    setError(null);
     
-    // Mock upload delay
-    setTimeout(() => {
+    try {
+      const response = await ApiService.issuerUpload(selectedFile, user.id, documentType);
+      
+      // Add new document to the list
       const newDoc = {
-        id: Date.now(),
-        name: selectedFile.name,
-        type: documentType,
-        uploadDate: new Date().toISOString().split('T')[0],
-        status: 'verified'
+        document_id: response.document_id,
+        filename: response.filename,
+        document_type: documentType,
+        issue_time: response.upload_timestamp,
+        status: response.status,
+        suspicion_score: response.suspicion_score,
+        ocr_text_preview: response.ocr_text_preview
       };
       
       setUploadedDocs([newDoc, ...uploadedDocs]);
       setSelectedFile(null);
-      setIsUploading(false);
       
       // Reset form
       document.getElementById('file-input').value = '';
-    }, 2000);
+      
+      alert('Document uploaded successfully!');
+    } catch (err) {
+      console.error('Upload failed:', err);
+      setError('Failed to upload document. Please try again.');
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (
@@ -171,7 +196,19 @@ const IssuerHomepage = ({ user, onLogout }) => {
               </div>
               
               <div className="p-6">
-                {uploadedDocs.length === 0 ? (
+                {error && (
+                  <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md flex items-center">
+                    <AlertCircle className="w-5 h-5 text-red-600 mr-2" />
+                    <span className="text-red-800">{error}</span>
+                  </div>
+                )}
+                
+                {loading ? (
+                  <div className="text-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-3"></div>
+                    <p className="text-gray-500">Loading documents...</p>
+                  </div>
+                ) : uploadedDocs.length === 0 ? (
                   <div className="text-center py-8">
                     <FileText className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                     <p className="text-gray-500">No documents issued yet</p>
@@ -179,25 +216,39 @@ const IssuerHomepage = ({ user, onLogout }) => {
                 ) : (
                   <div className="space-y-4">
                     {uploadedDocs.map((doc) => (
-                      <div key={doc.id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
+                      <div key={doc.document_id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center">
                             <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
                               <FileText className="w-5 h-5 text-blue-600" />
                             </div>
                             <div>
-                              <h3 className="font-medium text-gray-900">{doc.name}</h3>
+                              <h3 className="font-medium text-gray-900">{doc.filename}</h3>
                               <div className="flex items-center text-sm text-gray-500 mt-1">
-                                <span className="capitalize">{doc.type}</span>
+                                <span className="capitalize">{doc.document_type || doc.type}</span>
                                 <span className="mx-2">•</span>
-                                <span>{doc.uploadDate}</span>
+                                <span>{new Date(doc.issue_time || doc.uploadDate).toLocaleDateString()}</span>
                               </div>
+                              {/* {doc.ocr_text_preview && (
+                                <p className="text-xs text-gray-400 mt-1 truncate">
+                                  OCR: {doc.ocr_text_preview}
+                                </p>
+                              )} */}
                             </div>
                           </div>
-                          <div className="flex items-center">
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                          <div className="flex items-center space-x-3">
+                            {/* Suspicion Score */}
+                            <div className="text-sm text-gray-600">
+                              Score: <span className="font-medium text-green-600">{doc.suspicion_score || 0.0}</span>
+                            </div>
+                            {/* Status Badge */}
+                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                              (doc.status || 'verified') === 'verified' 
+                                ? 'bg-green-100 text-green-800' 
+                                : 'bg-yellow-100 text-yellow-800'
+                            }`}>
                               <CheckCircle className="w-3 h-3 mr-1" />
-                              Verified
+                              {(doc.status || 'verified').charAt(0).toUpperCase() + (doc.status || 'verified').slice(1)}
                             </span>
                           </div>
                         </div>

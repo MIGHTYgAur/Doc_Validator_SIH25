@@ -1,0 +1,35 @@
+{
+  "file_path": "uploads/sem1_marksheet.pdf",
+  "processing_timestamp": "2025-09-25T19:35:00.268169",
+  "status": "completed",
+  "pages_processed": 1,
+  "total_suspicion_score": 0,
+  "extracted_text": "ERROR: \u274c Tesseract OCR not found. Please install Tesseract OCR and add it to your PATH",
+  "page_results": [
+    {
+      "page_number": 1,
+      "image_path": "temp_images\\page_1.png",
+      "ocr_text": "ERROR: \u274c Tesseract OCR not found. Please install Tesseract OCR and add it to your PATH",
+      "suspicion_score": 0,
+      "processing_details": {},
+      "errors": [
+        "Error processing page 1: tesseract is not installed or it's not in your PATH. See README file for more information."
+      ]
+    }
+  ],
+  "validation_summary": {
+    "validation_level": "HIGH_CONFIDENCE",
+    "confidence_message": "Document appears authentic with high confidence",
+    "color_code": "green",
+    "average_suspicion_score": 0.0,
+    "total_pages": 1,
+    "text_extracted_successfully": true,
+    "watermark_applied": false
+  },
+  "errors": [
+    "Error processing page 1: tesseract is not installed or it's not in your PATH. See README file for more information.",
+    "Watermark error: rotate must be multiple of 90"
+  ],
+  "average_suspicion_score": 0.0,
+  "watermark_added": false
+}

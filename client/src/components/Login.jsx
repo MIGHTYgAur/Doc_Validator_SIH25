@@ -1,23 +1,57 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { User, Lock, UserCheck, Building2 } from 'lucide-react';
+import ApiService from '../services/ApiService';
 
-const MockLogin = ({ onLogin }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [userType, setUserType] = useState('issuer');
+const Login = ({ onLogin }) => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    institution: '',
+    role: 'issuer'
+  });
   const [isLogin, setIsLogin] = useState(true);
-  const [name, setName] = useState('');
+  const [institutes, setInstitutes] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     
     const userData = isLogin 
-      ? { email, password, userType }
-      : { email, password, userType, name };
+      ? { email: formData.email, password: formData.password, userType: formData.role }
+      : { ...formData, userType: formData.role };
     
     // Call parent login handler
     onLogin(userData, isLogin);
   };
+
+  // Fetch institutes on component mount for registration
+  useEffect(() => {
+    const fetchInstitutes = async () => {
+      try {
+        setLoading(true);
+        const response = await ApiService.getInstitutesList();
+        if (response.success) {
+          setInstitutes(response.institutes);
+        } else {
+          console.error('Failed to fetch institutes:', response.error);
+        }
+      } catch (error) {
+        console.error('Error fetching institutes:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (!isLogin) {
+      fetchInstitutes();
+    }
+  }, [isLogin]);
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
@@ -45,9 +79,9 @@ const MockLogin = ({ onLogin }) => {
             <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
-                onClick={() => setUserType('issuer')}
+                onClick={() => setFormData({...formData, role: 'issuer'})}
                 className={`p-3 rounded-lg border-2 transition-all ${
-                  userType === 'issuer'
+                  formData.role === 'issuer'
                     ? 'border-blue-500 bg-blue-50 text-blue-700'
                     : 'border-gray-200 hover:border-gray-300'
                 }`}
@@ -57,9 +91,9 @@ const MockLogin = ({ onLogin }) => {
               </button>
               <button
                 type="button"
-                onClick={() => setUserType('verifier')}
+                onClick={() => setFormData({...formData, role: 'verifier'})}
                 className={`p-3 rounded-lg border-2 transition-all ${
-                  userType === 'verifier'
+                  formData.role === 'verifier'
                     ? 'border-green-500 bg-green-50 text-green-700'
                     : 'border-gray-200 hover:border-gray-300'
                 }`}
@@ -69,6 +103,38 @@ const MockLogin = ({ onLogin }) => {
               </button>
             </div>
           </div>
+
+          {/* Institute field for registration */}
+          { !isLogin && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Institute
+              </label>
+              {loading ? (
+                <div className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100">
+                  Loading institutes...
+                </div>
+              ) : (
+                <select
+                  name="institution"
+                  value={formData.institution}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required={!isLogin}
+                >
+                  <option value="">Select an institute</option>
+                  {institutes.map((institute) => (
+                    <option key={institute.id} value={institute.name}>
+                      {institute.name} ({institute.type})
+                    </option>
+                  ))}
+                </select>
+              )}
+              <p className="text-xs text-gray-500 mt-1">
+                If your institute is not listed, contact admin to register it first.
+              </p>
+            </div>
+          )}
 
           {/* Name field for registration */}
           {!isLogin && (
@@ -80,8 +146,9 @@ const MockLogin = ({ onLogin }) => {
                 <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Enter your full name"
                   required
@@ -99,8 +166,9 @@ const MockLogin = ({ onLogin }) => {
               <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Enter your email"
                 required
@@ -117,8 +185,9 @@ const MockLogin = ({ onLogin }) => {
               <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Enter your password"
                 required
@@ -146,14 +215,14 @@ const MockLogin = ({ onLogin }) => {
         </div>
 
         {/* Demo Notice */}
-        <div className="mt-6 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+        {/* <div className="mt-6 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
           <p className="text-sm text-yellow-800 text-center">
             🎭 <strong>Demo Mode:</strong> Use any email/password to login
           </p>
-        </div>
+        </div> */}
       </div>
     </div>
   );
 };
 
-export default MockLogin;
+export default Login;

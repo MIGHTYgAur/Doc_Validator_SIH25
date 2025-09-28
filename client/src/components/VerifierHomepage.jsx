@@ -1,31 +1,48 @@
-import { useState } from 'react';
-import { Upload, Search, FileText, User, LogOut, CheckCircle, AlertTriangle, Clock, Shield } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Upload, Search, FileText, User, LogOut, CheckCircle, AlertTriangle, Clock, Shield, AlertCircle, Eye } from 'lucide-react';
+import ApiService from '../services/ApiService';
+import AnalysisDialog from './AnalysisDialog';
 
 const VerifierHomepage = ({ user, onLogout }) => {
   const [selectedFile, setSelectedFile] = useState(null);
+  const [documentType, setDocumentType] = useState('unknown');
   const [isVerifying, setIsVerifying] = useState(false);
-  const [verifiedDocs, setVerifiedDocs] = useState([
-    {
-      id: 1,
-      name: 'University_Degree.pdf',
-      uploadDate: '2025-01-15',
-      suspicionScore: 0.2,
-      status: 'verified',
-      result: 'Document appears authentic'
-    },
-    {
-      id: 2,
-      name: 'Professional_License.jpg',
-      uploadDate: '2025-01-14',
-      suspicionScore: 0.7,
-      status: 'suspicious',
-      result: 'Potential alterations detected'
+  const [verifiedDocs, setVerifiedDocs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [analysisDialog, setAnalysisDialog] = useState({ isOpen: false, documentId: null });
+
+  // Load documents on component mount
+  useEffect(() => {
+    loadDocuments();
+  }, []);
+
+  const handleViewAnalysis = (documentId) => {
+    console.log('🔍 Opening analysis for document:', documentId);
+    setAnalysisDialog({ isOpen: true, documentId });
+  };
+
+  const handleCloseAnalysis = () => {
+    setAnalysisDialog({ isOpen: false, documentId: null });
+  };
+
+  const loadDocuments = async () => {
+    try {
+      setLoading(true);
+      const response = await ApiService.getVerifierDocuments(user.id);
+      setVerifiedDocs(response.documents || []);
+    } catch (err) {
+      console.error('Failed to load documents:', err);
+      setError('Failed to load documents');
+    } finally {
+      setLoading(false);
     }
-  ]);
+  };
 
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
     setSelectedFile(file);
+    setError(null);
   };
 
   const handleVerify = async (e) => {
@@ -33,30 +50,36 @@ const VerifierHomepage = ({ user, onLogout }) => {
     if (!selectedFile) return;
 
     setIsVerifying(true);
+    setError(null);
     
-    // Mock verification delay
-    setTimeout(() => {
-      const suspicionScore = Math.random();
+    try {
+      const response = await ApiService.verifierUpload(selectedFile, user.id, documentType);
+      
+      // Add new document to the list
       const newDoc = {
-        id: Date.now(),
-        name: selectedFile.name,
-        uploadDate: new Date().toISOString().split('T')[0],
-        suspicionScore: suspicionScore,
-        status: suspicionScore < 0.3 ? 'verified' : suspicionScore < 0.7 ? 'pending' : 'suspicious',
-        result: suspicionScore < 0.3 
-          ? 'Document appears authentic' 
-          : suspicionScore < 0.7 
-          ? 'Requires manual review'
-          : 'Potential alterations detected'
+        document_id: response.document_id,
+        filename: response.filename,
+        document_type: documentType,
+        verification_time: response.upload_timestamp,
+        suspicion_score: response.suspicion_score,
+        status: response.status,
+        ocr_text_preview: response.ocr_text_preview,
+        verification_notes: response.verification_notes
       };
       
       setVerifiedDocs([newDoc, ...verifiedDocs]);
       setSelectedFile(null);
-      setIsVerifying(false);
       
       // Reset form
       document.getElementById('verify-file-input').value = '';
-    }, 3000);
+      
+      alert(`Document verified! ${response.suspicion_score*100}% suspicious` );
+    } catch (err) {
+      console.error('Verification failed:', err);
+      setError('Failed to verify document. Please try again.');
+    } finally {
+      setIsVerifying(false);
+    }
   };
 
   const getStatusColor = (status) => {
@@ -83,6 +106,14 @@ const VerifierHomepage = ({ user, onLogout }) => {
       default:
         return <FileText className="w-3 h-3 mr-1" />;
     }
+  };
+
+  const openAnalysisDialog = (documentId) => {
+    setAnalysisDialog({ isOpen: true, documentId });
+  };
+
+  const closeAnalysisDialog = () => {
+    setAnalysisDialog({ isOpen: false, documentId: null });
   };
 
   return (
@@ -126,6 +157,25 @@ const VerifierHomepage = ({ user, onLogout }) => {
               </h2>
               
               <form onSubmit={handleVerify} className="space-y-4">
+                {/* Document Type */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Document Type
+                  </label>
+                  <select
+                    value={documentType}
+                    onChange={(e) => setDocumentType(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  >
+                    <option value="unknown">Unknown</option>
+                    <option value="certificate">Certificate</option>
+                    <option value="diploma">Diploma</option>
+                    <option value="transcript">Transcript</option>
+                    <option value="license">License</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+
                 {/* File Upload */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -204,7 +254,19 @@ const VerifierHomepage = ({ user, onLogout }) => {
               </div>
               
               <div className="p-6">
-                {verifiedDocs.length === 0 ? (
+                {error && (
+                  <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md flex items-center">
+                    <AlertCircle className="w-5 h-5 text-red-600 mr-2" />
+                    <span className="text-red-800">{error}</span>
+                  </div>
+                )}
+
+                {loading ? (
+                  <div className="text-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto mb-3"></div>
+                    <p className="text-gray-500">Loading documents...</p>
+                  </div>
+                ) : verifiedDocs.length === 0 ? (
                   <div className="text-center py-8">
                     <Shield className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                     <p className="text-gray-500">No documents verified yet</p>
@@ -212,36 +274,49 @@ const VerifierHomepage = ({ user, onLogout }) => {
                 ) : (
                   <div className="space-y-4">
                     {verifiedDocs.map((doc) => (
-                      <div key={doc.id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
+                      <div key={doc.document_id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
                         <div className="flex items-start justify-between">
                           <div className="flex items-start">
                             <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-3 mt-1">
                               <FileText className="w-5 h-5 text-green-600" />
                             </div>
                             <div className="flex-1">
-                              <h3 className="font-medium text-gray-900">{doc.name}</h3>
-                              <p className="text-sm text-gray-600 mt-1">{doc.result}</p>
+                              <h3 className="font-medium text-gray-900">{doc.filename}</h3>
+                              <p className="text-sm text-gray-600 mt-1 capitalize">{doc.document_type}</p>
                               <div className="flex items-center text-sm text-gray-500 mt-2">
-                                <span>Verified on {doc.uploadDate}</span>
+                                <span>Analyzed on {new Date(doc.verification_time).toLocaleDateString()}</span>
                                 <span className="mx-2">•</span>
-                                <span>Suspicion Score: {(doc.suspicionScore * 100).toFixed(1)}%</span>
+                                <span>Score: {(doc.suspicion_score * 100).toFixed(1)}%</span>
                               </div>
+                              {/* {doc.verification_notes && (
+                                <p className="text-xs text-blue-600 mt-1">{doc.verification_notes}</p>
+                              )} */}
                             </div>
                           </div>
-                          <div className="flex flex-col items-end">
+                          <div className="flex flex-col items-end space-y-2">
                             <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(doc.status)}`}>
                               {getStatusIcon(doc.status)}
                               {doc.status.charAt(0).toUpperCase() + doc.status.slice(1)}
                             </span>
+                            
+                            {/* View Analysis Button */}
+                            <button
+                              onClick={() => handleViewAnalysis(doc.document_id)}
+                              className="inline-flex items-center px-3 py-1 border border-gray-300 shadow-sm text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                            >
+                              <Eye className="w-3 h-3 mr-1" />
+                              View Analysis
+                            </button>
+                            
                             {/* Suspicion Score Bar */}
-                            <div className="w-16 mt-2">
+                            <div className="w-16">
                               <div className="bg-gray-200 rounded-full h-1.5">
                                 <div 
                                   className={`h-1.5 rounded-full ${
-                                    doc.suspicionScore < 0.3 ? 'bg-green-500' : 
-                                    doc.suspicionScore < 0.7 ? 'bg-yellow-500' : 'bg-red-500'
+                                    doc.suspicion_score < 0.3 ? 'bg-green-500' : 
+                                    doc.suspicion_score < 0.7 ? 'bg-yellow-500' : 'bg-red-500'
                                   }`}
-                                  style={{ width: `${doc.suspicionScore * 100}%` }}
+                                  style={{ width: `${doc.suspicion_score * 100}%` }}
                                 ></div>
                               </div>
                             </div>
@@ -256,6 +331,13 @@ const VerifierHomepage = ({ user, onLogout }) => {
           </div>
         </div>
       </div>
+      
+      {/* Analysis Dialog */}
+      <AnalysisDialog 
+        isOpen={analysisDialog.isOpen}
+        onClose={handleCloseAnalysis}
+        documentId={analysisDialog.documentId}
+      />
     </div>
   );
 };

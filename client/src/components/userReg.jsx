@@ -1,14 +1,41 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Shield, Building } from 'lucide-react';
+import ApiService from '../services/ApiService';
 
 const UserAuthForm = ({ isLogin = true, onToggle, onSubmit, userType = 'individual' }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
-    institute: '',
+    institution: '', // Changed from 'institute' to 'institution' to match backend
     role: 'issuer'
   });
+
+  const [institutes, setInstitutes] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // Fetch institutes on component mount
+  useEffect(() => {
+    const fetchInstitutes = async () => {
+      try {
+        setLoading(true);
+        const response = await ApiService.getInstitutesList();
+        if (response.success) {
+          setInstitutes(response.institutes);
+        } else {
+          console.error('Failed to fetch institutes:', response.error);
+        }
+      } catch (error) {
+        console.error('Error fetching institutes:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (!isLogin && userType === 'individual') {
+      fetchInstitutes();
+    }
+  }, [isLogin, userType]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -86,14 +113,29 @@ const UserAuthForm = ({ isLogin = true, onToggle, onSubmit, userType = 'individu
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Institute
                 </label>
-                <input
-                  type="text"
-                  name="institute"
-                  value={formData.institute}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  required={!isLogin}
-                />
+                {loading ? (
+                  <div className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100">
+                    Loading institutes...
+                  </div>
+                ) : (
+                  <select
+                    name="institution"
+                    value={formData.institution}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    required={!isLogin}
+                  >
+                    <option value="">Select an institute</option>
+                    {institutes.map((institute) => (
+                      <option key={institute.id} value={institute.name}>
+                        {institute.name} ({institute.type})
+                      </option>
+                    ))}
+                  </select>
+                )}
+                <p className="text-xs text-gray-500 mt-1">
+                  If your institute is not listed, contact admin to register it first.
+                </p>
               </div>
 
               <div>

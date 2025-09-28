@@ -4,7 +4,7 @@ mongo = PyMongo()
 
 def initialize_db(app):
     try:
-        print(f"Connecting to MongoDB with URI: {app.config['MONGO_URI'][:50]}...")
+        print(f"Connecting to MongoDB ")
         mongo.init_app(app)
         
         # Test the connection

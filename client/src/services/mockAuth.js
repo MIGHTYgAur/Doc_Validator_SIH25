@@ -1,37 +1,43 @@
 // Mock authentication service
+import ApiService from './ApiService';
+
 export class MockAuthService {
   static currentUser = null;
 
-  static login(email, password, userType) {
-    // Mock validation - accepts any credentials
-    if (email && password) {
-      const user = {
-        id: Math.random().toString(36).substr(2, 9),
-        email: email,
-        name: email.split('@')[0],
-        userType: userType, // 'issuer' or 'verifier'
-        loginTime: new Date().toISOString()
-      };
+  static async login(email, password, userType) {
+    try {
+      // Use ApiService for login
+      const response = await ApiService.loginUser(email, password, userType);
       
-      this.currentUser = user;
-      localStorage.setItem('mockUser', JSON.stringify(user));
-      return { success: true, user };
+      if (response.success) {
+        this.currentUser = response.user;
+        localStorage.setItem('mockUser', JSON.stringify(response.user));
+        return { success: true, user: response.user };
+      }
+      
+      return { success: false, error: 'Invalid credentials' };
+    } catch (error) {
+      console.error('Login error:', error);
+      return { success: false, error: 'Login failed' };
     }
-    
-    return { success: false, error: 'Invalid credentials' };
   }
 
-  static register(userData) {
-    // Mock registration - accepts any data
-    const user = {
-      id: Math.random().toString(36).substr(2, 9),
-      ...userData,
-      registeredAt: new Date().toISOString()
-    };
-    
-    this.currentUser = user;
-    localStorage.setItem('mockUser', JSON.stringify(user));
-    return { success: true, user };
+  static async register(userData) {
+    try {
+      // Use ApiService for registration
+      const response = await ApiService.createUser(userData);
+      
+      if (response.success) {
+        this.currentUser = response.user;
+        localStorage.setItem('mockUser', JSON.stringify(response.user));
+        return { success: true, user: response.user };
+      }
+      
+      return { success: false, error: 'Registration failed' };
+    } catch (error) {
+      console.error('Registration error:', error);
+      return { success: false, error: 'Registration failed' };
+    }
   }
 
   static logout() {
