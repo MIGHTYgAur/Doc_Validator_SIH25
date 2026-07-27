@@ -1,0 +1,13 @@
+batch,workers,time_s,speedup,efficiency_pct,avg_file_kb,regime
+10,1,0.077,1.0,100.0,120.5,limited scaling
+10,2,0.0415,1.86,92.8,120.5,good scaling
+10,4,0.0314,2.45,61.4,120.5,good scaling
+25,1,0.2001,1.0,100.0,120.5,limited scaling
+25,2,0.1126,1.78,88.9,120.5,good scaling
+25,4,0.0658,3.04,76.0,120.5,good scaling
+50,1,0.3876,1.0,100.0,120.5,limited scaling
+50,2,0.2229,1.74,87.0,120.5,good scaling
+50,4,0.1257,3.08,77.1,120.5,good scaling
+60,1,0.4669,1.0,100.0,120.5,limited scaling
+60,2,0.2604,1.79,89.7,120.5,good scaling
+60,4,0.1477,3.16,79.0,120.5,good scaling

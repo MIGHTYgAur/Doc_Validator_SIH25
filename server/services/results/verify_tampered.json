@@ -1,0 +1,332 @@
+[
+  {
+    "document": "transcript_0000.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_000"
+    ]
+  },
+  {
+    "document": "transcript_0000_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0001.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_002"
+    ]
+  },
+  {
+    "document": "transcript_0001_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0002.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_001"
+    ]
+  },
+  {
+    "document": "transcript_0002_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0003.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_000"
+    ]
+  },
+  {
+    "document": "transcript_0003_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0004.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_000"
+    ]
+  },
+  {
+    "document": "transcript_0004_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0005.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_003"
+    ]
+  },
+  {
+    "document": "transcript_0005_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0006.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_000"
+    ]
+  },
+  {
+    "document": "transcript_0006_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0007.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_001"
+    ]
+  },
+  {
+    "document": "transcript_0007_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0008.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_000"
+    ]
+  },
+  {
+    "document": "transcript_0008_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0009.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_001"
+    ]
+  },
+  {
+    "document": "transcript_0009_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0010.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_001"
+    ]
+  },
+  {
+    "document": "transcript_0010_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0011.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_002"
+    ]
+  },
+  {
+    "document": "transcript_0011_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0012.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_001"
+    ]
+  },
+  {
+    "document": "transcript_0012_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0013.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_002"
+    ]
+  },
+  {
+    "document": "transcript_0013_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0014.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_001"
+    ]
+  },
+  {
+    "document": "transcript_0014_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0015.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_002"
+    ]
+  },
+  {
+    "document": "transcript_0015_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0016.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_000"
+    ]
+  },
+  {
+    "document": "transcript_0016_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0017.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_000"
+    ]
+  },
+  {
+    "document": "transcript_0017_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0018.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_002"
+    ]
+  },
+  {
+    "document": "transcript_0018_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0019.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_000"
+    ]
+  },
+  {
+    "document": "transcript_0019_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0020.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_003"
+    ]
+  },
+  {
+    "document": "transcript_0020_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0021.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_000"
+    ]
+  },
+  {
+    "document": "transcript_0021_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0022.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_003"
+    ]
+  },
+  {
+    "document": "transcript_0022_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0023.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_002"
+    ]
+  },
+  {
+    "document": "transcript_0023_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0024.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_001"
+    ]
+  },
+  {
+    "document": "transcript_0024_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0025.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_000"
+    ]
+  },
+  {
+    "document": "transcript_0025_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0026.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_001"
+    ]
+  },
+  {
+    "document": "transcript_0026_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0027.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_000"
+    ]
+  },
+  {
+    "document": "transcript_0027_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0028.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_001"
+    ]
+  },
+  {
+    "document": "transcript_0028_tamper.json",
+    "status": "NO_REFERENCE"
+  },
+  {
+    "document": "transcript_0029.pdf",
+    "status": "FAIL",
+    "tampered_sections": [
+      "chunk_003"
+    ]
+  },
+  {
+    "document": "transcript_0029_tamper.json",
+    "status": "NO_REFERENCE"
+  }
+]
